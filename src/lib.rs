@@ -314,12 +314,13 @@ impl Bencher {
         self.iterated = true;
         self.elapsed = Duration::from_secs(0);
         for _ in 0..self.iters {
-            let input = setup();
+            let input = black_box(setup());
 
             let start = Instant::now();
-            let output = black_box(routine(black_box(input)));
-            let elapsed = start.elapsed();
-
+            let output = routine(input);
+            let elapsed = black_box(start.elapsed());
+            
+            let output = black_box(output);
             mem::drop(output);
 
             self.elapsed += elapsed;
